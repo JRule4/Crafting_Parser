@@ -16,10 +16,12 @@ namespace Crafting_Parser
     public partial class CraftingDataDisplay : Form
     {
         CraftingParser craftingParser = new CraftingParser();
+        Thread parserThread = null;
         readonly string ffCharactersPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\My Games\\FINAL FANTASY XIV - A Realm Reborn\\";
 
         public CraftingDataDisplay()
         {
+            FormClosing += new FormClosingEventHandler(CraftingDataDisplay_Closing);
             InitializeComponent();
 
             dateFilterStart.MaxDate = DateTime.Now;
@@ -47,8 +49,8 @@ namespace Crafting_Parser
             {
                 if (craftingParser.CharacterLogs.ContainsKey(picker.characterSelected))
                 {
-                    Thread parseThread = new Thread(new ParameterizedThreadStart(ParseDirectory));
-                    parseThread.Start(craftingParser.CharacterLogs[picker.characterSelected]);
+                    parserThread = new Thread(new ParameterizedThreadStart(ParseDirectory));
+                    parserThread.Start(craftingParser.CharacterLogs[picker.characterSelected]);
                 }
             }
 
@@ -70,8 +72,8 @@ namespace Crafting_Parser
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                Thread parseThread = new Thread(new ParameterizedThreadStart(ParseDirectory));
-                parseThread.Start(openFileDialog1.SelectedPath);
+                parserThread = new Thread(new ParameterizedThreadStart(ParseDirectory));
+                parserThread.Start(openFileDialog1.SelectedPath);
             }
         }
 
@@ -114,6 +116,14 @@ namespace Crafting_Parser
         private void dateFilterEnd_ValueChanged(object sender, EventArgs e)
         {
             dateFilterEnd.Value = new DateTime(dateFilterEnd.Value.Year, dateFilterEnd.Value.Month, dateFilterEnd.Value.Day, 23, 59, 59);
+        }
+
+        private void CraftingDataDisplay_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (parserThread != null && parserThread.IsAlive)
+            {
+                parserThread.Abort();
+            }
         }
     }
 }

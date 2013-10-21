@@ -239,7 +239,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "CraftingDataDisplay";
-            this.Text = "Form1";
+            this.Text = "Crafting Parser";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
