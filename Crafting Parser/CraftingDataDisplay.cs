@@ -26,7 +26,7 @@ namespace Crafting_Parser
 
             dateFilterStart.MaxDate = DateTime.Now;
             dateFilterStart.Value = DateTime.Now.AddDays(-14);
-            dateFilterEnd.MaxDate = DateTime.Now;
+            dateFilterEnd.MaxDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
 
             craftingParser.Init(dateTreeView, itemTypeTreeView, ffCharactersPath);
         }
